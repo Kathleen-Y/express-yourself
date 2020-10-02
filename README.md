@@ -8,8 +8,9 @@ SO THAT I can organize my thoughts and keep track of tasks I need to complete.`
 
 ## Languages
 - Db
-- package.json
-- 
+- Express
+
 
 ## Contact
-
+* GitHub: [@profile](https://github.com/Kathleen-Y)
+* Twitter: [@Ros3p3tal](https://twitter.com/Ros3p3tal)
