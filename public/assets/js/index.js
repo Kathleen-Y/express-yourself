@@ -5,16 +5,16 @@ var $newNoteBtn = $(".new-note");
 var $noteList = $(".list-container .list-group");
 var activeNote = {};
 
-var getNote = function() {
+var getNotes = function() {
   return $.ajax({
-    url: "/api/note",
+    url: "/api/notes",
     method: "GET"
   });
 };
 
 var saveNote = function(note) {
   return $.ajax({
-    url: "/api/postnote",
+    url: "/api/postnotes",
     data: note,
     method: "POST"
   });
@@ -22,14 +22,13 @@ var saveNote = function(note) {
 
 var deleteNote = function(id) {
   return $.ajax({
-    url: "api/note/" + id,
+    url: "api/notes/" + id,
     method: "DELETE"
   });
 };
 
 var renderActiveNote = function() {
   $saveNoteBtn.hide();
-
   if (activeNote.id) {
     $noteTitle.attr("readonly", true);
     $noteText.attr("readonly", true);
@@ -43,6 +42,7 @@ var renderActiveNote = function() {
   }
 };
 
+
 var handleNoteSave = function() {
   var newNote = {
     title: $noteTitle.val(),
@@ -50,10 +50,11 @@ var handleNoteSave = function() {
   };
 
   saveNote(newNote).then(function(data) {
-    getAndRenderNote();
+    getAndRenderNotes();
     renderActiveNote();
   });
 };
+
 
 var handleNoteDelete = function(event) {
   event.stopPropagation();
@@ -67,18 +68,16 @@ var handleNoteDelete = function(event) {
   }
 
   deleteNote(note.id).then(function() {
-    getAndRenderNote();
+    getAndRenderNotes();
     renderActiveNote();
   });
 };
 
-// Sets the activeNote and displays it
 var handleNoteView = function() {
   activeNote = $(this).data();
   renderActiveNote();
 };
 
-// Sets the activeNote to and empty object and allows the user to enter a new note
 var handleNewNoteView = function() {
   activeNote = {};
   renderActiveNote();
@@ -92,13 +91,12 @@ var handleRenderSaveBtn = function() {
   }
 };
 
-var renderNoteList = function(note) {
+var renderNoteList = function(notes) {
   $noteList.empty();
-
   var noteListItems = [];
 
-  for (var i = 0; i < note.length; i++) {
-    var note = note[i];
+  for (var i = 0; i < notes.length; i++) {
+    var note = notes[i];
 
     var $li = $("<li class='list-group-item'>").data(note);
     var $span = $("<span>").text(note.title);
@@ -113,8 +111,8 @@ var renderNoteList = function(note) {
   $noteList.append(noteListItems);
 };
 
-var getAndRenderNote = function() {
-  return getNote().then(function(data) {
+var getAndRenderNotes = function() {
+  return getNotes().then(function(data) {
     renderNoteList(data);
   });
 };
@@ -126,4 +124,4 @@ $noteList.on("click", ".delete-note", handleNoteDelete);
 $noteTitle.on("keyup", handleRenderSaveBtn);
 $noteText.on("keyup", handleRenderSaveBtn);
 
-getAndRenderNote();
+getAndRenderNotes();
